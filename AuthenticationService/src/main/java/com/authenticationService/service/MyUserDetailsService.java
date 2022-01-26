@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.authenticationService.DAO.UserRepository;
@@ -16,9 +15,6 @@ import com.authenticationService.DAO.UserRepository;
 @Service
 public class MyUserDetailsService implements UserDetailsService {
 
-	@Autowired
-	private BCryptPasswordEncoder passwordEncoder;
-	
 	@Autowired
 	private UserRepository userRepo;
 	private com.authenticationService.entities.User user;
@@ -28,7 +24,7 @@ public class MyUserDetailsService implements UserDetailsService {
 		user = userRepo.findByLoginId(username);
 		if(username.equals(user.getLoginId())) {
 			return new User(user.getLoginId(), 
-							passwordEncoder.encode(user.getPassword()), 
+							user.getPassword(), 
 							new ArrayList<GrantedAuthority>());
 		}
 		else {
