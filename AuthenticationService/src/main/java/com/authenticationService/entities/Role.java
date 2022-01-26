@@ -1,4 +1,4 @@
-package com.authenticationService.entity;
+package com.authenticationService.entities;
 
 import java.sql.Timestamp;
 

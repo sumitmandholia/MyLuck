@@ -1,4 +1,4 @@
-package com.authenticationService.entity;
+package com.authenticationService.entities;
 
 import java.sql.Timestamp;
 import java.util.HashSet;
@@ -24,14 +24,11 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 
+import com.authenticationService.util.UserStatus;
+
 @Entity
 @Table(name="USERS")
 public class User {
-	
-	public static enum UserStatus {
-        ACTIVE, INACTIVE, BLOCKED
-    }
-
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userid_gen")

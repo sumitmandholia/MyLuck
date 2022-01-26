@@ -14,7 +14,7 @@ import java.util.function.Function;
 @Service
 public class JWTUtil {
 	
-	private static final long JWT_TOKEN_VALIDATED = 60 * 60 * 60;
+	private static final long JWT_TOKEN_VALIDATED = 60 * 60 * 1000;
     
 	private String SECRET_KEY = "secret";
     

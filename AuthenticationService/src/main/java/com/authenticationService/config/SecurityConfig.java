@@ -32,8 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		// TODO Auto-generated method stub
-		//super.configure(auth);
-		auth.userDetailsService(myUserDetailsService);
+		auth.userDetailsService(myUserDetailsService).passwordEncoder(passwordEncoder());
 	}
 
 	@Override
@@ -59,8 +58,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 	
 	@Bean
-	public static NoOpPasswordEncoder passwordEncoder() {
-		return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
+	public static BCryptPasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
 	}
 	
 	
