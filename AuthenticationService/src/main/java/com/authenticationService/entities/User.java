@@ -1,6 +1,5 @@
 package com.authenticationService.entities;
 
-import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,17 +17,12 @@ import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.LastModifiedBy;
-
+import com.authenticationService.model.AuditorEntity;
 import com.authenticationService.util.UserStatus;
 
 @Entity
 @Table(name="USERS")
-public class User {
+public class User extends AuditorEntity{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userid_gen")
@@ -52,25 +46,8 @@ public class User {
 	@Column(name = "USER_STATUS", nullable = false)
 	private UserStatus userStatus;
 	
-	@Column(name = "IS_PASSWORD_EXPIRED", nullable = false)
-	@ColumnDefault("false")
-	private Boolean isPasswordExpired;
-	
-	@Column(name="CREATED_BY")
-	@CreatedBy
-	private String createdBy;
-	
-	@Column(name="CREATED_AT")
-	@CreationTimestamp
-	private Timestamp createdAt;
-	
-	@Column(name="LAST_MODIFIED_BY")
-	@LastModifiedBy
-	private String lastModifiedBy;
-	
-	@Column(name="LAST_MODIFIED_AT")
-	@UpdateTimestamp
-	private Timestamp lastModifiedAt;
+	@Column(name = "IS_PASSWORD_EXPIRED", columnDefinition="BOOLEAN DEFAULT false", nullable = false)
+	private boolean isPasswordExpired;
 	
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "USER_ROLE", joinColumns = { @JoinColumn(name = "USER_ID") }, inverseJoinColumns = { @JoinColumn(name = "ROLE_ID") })
@@ -124,44 +101,12 @@ public class User {
 		this.userStatus = userStatus;
 	}
 
-	public Boolean getIsPasswordExpired() {
+	public boolean getIsPasswordExpired() {
 		return isPasswordExpired;
 	}
 
-	public void setIsPasswordExpired(Boolean isPasswordExpired) {
+	public void setIsPasswordExpired(boolean isPasswordExpired) {
 		this.isPasswordExpired = isPasswordExpired;
-	}
-
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public Timestamp getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(Timestamp createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public String getLastModifiedBy() {
-		return lastModifiedBy;
-	}
-
-	public void setLastModifiedBy(String lastModifiedBy) {
-		this.lastModifiedBy = lastModifiedBy;
-	}
-
-	public Timestamp getLastModifiedAt() {
-		return lastModifiedAt;
-	}
-
-	public void setLastModifiedAt(Timestamp lastModifiedAt) {
-		this.lastModifiedAt = lastModifiedAt;
 	}
 
 	public Set<Role> getRoles() {
