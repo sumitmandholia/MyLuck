@@ -5,11 +5,13 @@ import java.util.Set;
 
 import com.authenticationService.entities.Role;
 import com.authenticationService.util.UserStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class UserRoleDtlsDTO {
 
 	private Long userId;
-	private String loginId;
+	private String username;
+	@JsonIgnore
 	private String password;
 	private String emailId;
 	private Long phoneNumber;
@@ -23,11 +25,11 @@ public class UserRoleDtlsDTO {
 	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
-	public String getLoginId() {
-		return loginId;
+	public String getUsername() {
+		return username;
 	}
-	public void setLoginId(String loginId) {
-		this.loginId = loginId;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 	public String getPassword() {
 		return password;
@@ -72,8 +74,8 @@ public class UserRoleDtlsDTO {
 		StringBuilder builder = new StringBuilder();
 		builder.append("UserRoleDtlsDTO [userId=");
 		builder.append(userId);
-		builder.append(", loginId=");
-		builder.append(loginId);
+		builder.append(", username=");
+		builder.append(username);
 		builder.append(", password=");
 		builder.append(password);
 		builder.append(", emailId=");
