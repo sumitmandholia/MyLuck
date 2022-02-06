@@ -8,12 +8,19 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.springframework.security.core.GrantedAuthority;
+
 import com.authenticationService.model.AuditorEntity;
 
 @Entity
 @Table(name="ROLES")
-public class Role extends AuditorEntity {
+public class Role extends AuditorEntity implements GrantedAuthority {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5491769523784372915L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ROLEID_GEN")
 	@SequenceGenerator(name = "ROLEID_GEN", sequenceName = "ROLEID_SEQ",allocationSize = 1,initialValue = 1)
@@ -48,6 +55,12 @@ public class Role extends AuditorEntity {
 
 	public void setRoleDesciption(String roleDesciption) {
 		this.roleDesciption = roleDesciption;
+	}
+
+	@Override
+	public String getAuthority() {
+		// TODO Auto-generated method stub
+		return roleName;
 	}	
 	
 }

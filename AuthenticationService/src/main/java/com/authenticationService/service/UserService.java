@@ -6,4 +6,6 @@ public interface UserService {
 
 	public UserRoleDtlsDTO createAdmin(UserRoleDtlsDTO userRoleDtlsDTO);
 
+	public UserRoleDtlsDTO getAdminUser(Long userId);
+
 }

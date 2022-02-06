@@ -1,5 +1,7 @@
 package com.authenticationService.service;
 
+import java.util.Optional;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -32,6 +34,16 @@ public class UserServiceImpl implements UserService{
 		user = userRepo.save(user);
 		
 		return mapper.map(user, UserRoleDtlsDTO.class);
+	}
+
+
+	@Override
+	public UserRoleDtlsDTO getAdminUser(Long userId) {
+		// TODO Auto-generated method stub
+		Optional<User> optionalUser = userRepo.findById(userId);
+		User user = optionalUser.get();
+		UserRoleDtlsDTO userRoleDtlsDTO = mapper.map(user, UserRoleDtlsDTO.class);
+		return userRoleDtlsDTO;
 	}
 
 }

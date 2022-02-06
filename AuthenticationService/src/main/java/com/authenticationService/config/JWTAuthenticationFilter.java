@@ -22,6 +22,7 @@ import com.authenticationService.util.AuthConstants;
 import com.authenticationService.util.JWTUtil;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.SignatureException;
 
 @Component
 public class JWTAuthenticationFilter extends OncePerRequestFilter{
@@ -42,23 +43,24 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter{
 		String requestTokenHeader = request.getHeader(AuthConstants.AUTHORIZATION_HEADER);
 		
 		String username = null;
-		String password = null;
-		
 		if(requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
 			
 			String token = requestTokenHeader.substring(7);
 			try {
 				username = jwtUtil.getUsernameFromToken(token);
 			}
+			catch(SignatureException e) {
+				throw new IOException("UnAuthorised Access..");
+			}
 			catch (ExpiredJwtException e) {
 				// TODO: handle exception
 				e.printStackTrace();
-				throw new ExportException("JWT Token Expired!!! Please Re-login");
+				throw new IOException("JWT Token Expired!!! Please Re-login");
 			}
 			catch (UsernameNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				throw new UsernameNotFoundException("Error Message..");
+				throw new IOException("Invalid User Name...");
 			}
 			
 			UserDetails userDetails = myUserDetailsService.loadUserByUsername(username);

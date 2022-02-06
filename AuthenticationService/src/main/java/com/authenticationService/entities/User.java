@@ -1,5 +1,6 @@
 package com.authenticationService.entities;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -8,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,13 +19,21 @@ import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import com.authenticationService.model.AuditorEntity;
 import com.authenticationService.util.UserStatus;
 
 @Entity
 @Table(name="USERS")
-public class User extends AuditorEntity{
+public class User extends AuditorEntity implements UserDetails{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7613977158752489481L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userid_gen")
 	@SequenceGenerator(name = "userid_gen", sequenceName = "userid_seq", initialValue = 1000, allocationSize = 1)
@@ -31,7 +41,7 @@ public class User extends AuditorEntity{
 	private Long userId;
 	
 	@Column(name = "LOGIN_ID", nullable = false, unique = true)
-	private String loginId;
+	private String username;
 	
 	@Column(name="LOGIN_PASSWORD", nullable = false)
 	private String password;
@@ -47,9 +57,9 @@ public class User extends AuditorEntity{
 	private UserStatus userStatus;
 	
 	@Column(name = "IS_PASSWORD_EXPIRED", columnDefinition="BOOLEAN DEFAULT false", nullable = false)
-	private boolean isPasswordExpired;
+	private boolean isPasswordExpired; 
 	
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "USER_ROLE", joinColumns = { @JoinColumn(name = "USER_ID") }, inverseJoinColumns = { @JoinColumn(name = "ROLE_ID") })
 	private Set<Role> roles = new HashSet<Role>(0);
 
@@ -61,12 +71,12 @@ public class User extends AuditorEntity{
 		this.userId = userId;
 	}
 
-	public String getLoginId() {
-		return loginId;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setLoginId(String loginId) {
-		this.loginId = loginId;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getPassword() {
@@ -108,13 +118,43 @@ public class User extends AuditorEntity{
 	public void setIsPasswordExpired(boolean isPasswordExpired) {
 		this.isPasswordExpired = isPasswordExpired;
 	}
-
+	
 	public Set<Role> getRoles() {
 		return roles;
 	}
 
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
+		return getRoles();
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return !(UserStatus.EXPIRED.equals(this.userStatus));
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return !(UserStatus.LOCKED.equals(this.userStatus));
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return !isPasswordExpired;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return UserStatus.ACTIVE.equals(this.userStatus);
 	}
 	
 	
